@@ -1,5 +1,7 @@
 # ML-KEM Post-Quantum Encryption Web App
 
+**this is my pet project to learn Rust and PQC. Please don't hate me with the "quality"**
+
 A web application demonstrating ML-KEM-768 (Module-Lattice-Based Key Encapsulation Mechanism) for quantum-resistant key exchange and secure messaging.
 
 ## Features
