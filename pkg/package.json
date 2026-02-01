@@ -1,0 +1,15 @@
+{
+  "name": "mlkem_wasm",
+  "type": "module",
+  "version": "0.1.0",
+  "files": [
+    "mlkem_wasm_bg.wasm",
+    "mlkem_wasm.js",
+    "mlkem_wasm.d.ts"
+  ],
+  "main": "mlkem_wasm.js",
+  "types": "mlkem_wasm.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}
