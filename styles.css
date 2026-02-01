@@ -5,25 +5,26 @@
 }
 
 :root {
-    --primary-color: #4f46e5;
-    --primary-hover: #4338ca;
+    --primary-color: #6366f1;
+    --primary-hover: #4f46e5;
     --success-color: #10b981;
     --success-hover: #059669;
     --error-color: #ef4444;
     --user-a-color: #3b82f6;
-    --user-b-color: #8b5cf6;
-    --bg-color: #f8fafc;
-    --card-bg: #ffffff;
-    --text-primary: #1e293b;
-    --text-secondary: #64748b;
-    --border-color: #e2e8f0;
-    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --user-b-color: #a855f7;
+    --bg-color: #0f172a;
+    --card-bg: #1e293b;
+    --card-bg-light: #334155;
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --border-color: #334155;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
 }
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
     min-height: 100vh;
     padding: 20px;
     color: var(--text-primary);
@@ -32,10 +33,12 @@ body {
 .container {
     max-width: 1400px;
     margin: 0 auto;
-    background: var(--bg-color);
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(10px);
     border-radius: 16px;
     padding: 40px;
     box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-color);
 }
 
 header {
@@ -50,6 +53,7 @@ h1 {
     color: var(--text-primary);
     margin-bottom: 10px;
     font-weight: 700;
+    text-shadow: 0 0 30px rgba(99, 102, 241, 0.5);
 }
 
 .subtitle {
@@ -64,9 +68,10 @@ h1 {
     gap: 10px;
     margin-bottom: 40px;
     padding: 20px;
-    background: linear-gradient(135deg, #667eea15, #764ba215);
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(168, 85, 247, 0.1));
     border-radius: 12px;
     flex-wrap: wrap;
+    border: 1px solid var(--border-color);
 }
 
 .workflow-step {
@@ -77,12 +82,14 @@ h1 {
     font-weight: 600;
     color: var(--text-primary);
     box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
 }
 
 .workflow-arrow {
     font-size: 1.5rem;
     color: var(--primary-color);
     font-weight: bold;
+    text-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
 }
 
 .users-container {
@@ -103,15 +110,18 @@ h1 {
     border-radius: 12px;
     padding: 30px;
     box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
     border-top: 4px solid;
 }
 
 .user-a {
     border-top-color: var(--user-a-color);
+    box-shadow: var(--shadow), 0 0 20px rgba(59, 130, 246, 0.1);
 }
 
 .user-b {
     border-top-color: var(--user-b-color);
+    box-shadow: var(--shadow), 0 0 20px rgba(168, 85, 247, 0.1);
 }
 
 .user-section h2 {
@@ -122,10 +132,12 @@ h1 {
 
 .user-a h2 {
     color: var(--user-a-color);
+    text-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
 }
 
 .user-b h2 {
     color: var(--user-b-color);
+    text-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
 }
 
 .step-section {
@@ -133,6 +145,7 @@ h1 {
     padding: 20px;
     background: var(--bg-color);
     border-radius: 8px;
+    border: 1px solid var(--border-color);
 }
 
 .step-section:last-child {
@@ -161,30 +174,37 @@ label {
     display: block;
     margin-bottom: 8px;
     font-weight: 600;
-    color: var(--text-primary);
+    color: var(--text-secondary);
     font-size: 0.9rem;
 }
 
 textarea {
     width: 100%;
     padding: 12px;
+    background: var(--card-bg-light);
     border: 2px solid var(--border-color);
     border-radius: 8px;
     font-family: 'Courier New', monospace;
     font-size: 0.85rem;
     resize: vertical;
     transition: border-color 0.2s, box-shadow 0.2s;
+    color: var(--text-primary);
 }
 
 textarea:focus {
     outline: none;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
 }
 
 textarea[readonly] {
-    background-color: #f1f5f9;
+    background-color: var(--card-bg);
     cursor: default;
+    color: var(--text-secondary);
+}
+
+textarea::placeholder {
+    color: #64748b;
 }
 
 .btn {
@@ -211,7 +231,7 @@ textarea[readonly] {
 .btn-primary:hover:not(:disabled) {
     background: var(--primary-hover);
     transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--shadow-lg), 0 0 20px rgba(99, 102, 241, 0.4);
 }
 
 .btn-primary:active:not(:disabled) {
@@ -226,7 +246,7 @@ textarea[readonly] {
 .btn-success:hover:not(:disabled) {
     background: var(--success-hover);
     transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--shadow-lg), 0 0 20px rgba(16, 185, 129, 0.4);
 }
 
 .btn-success:active:not(:disabled) {
@@ -238,9 +258,9 @@ textarea[readonly] {
     right: 10px;
     top: 32px;
     padding: 6px 12px;
-    background: var(--text-secondary);
-    color: white;
-    border: none;
+    background: var(--card-bg-light);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
     border-radius: 6px;
     font-size: 0.75rem;
     cursor: pointer;
@@ -248,7 +268,8 @@ textarea[readonly] {
 }
 
 .btn-copy:hover {
-    background: var(--text-primary);
+    background: var(--primary-color);
+    border-color: var(--primary-color);
     transform: scale(1.05);
 }
 
@@ -257,6 +278,7 @@ textarea[readonly] {
     border-radius: 12px;
     padding: 30px;
     box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
     border-top: 4px solid var(--success-color);
 }
 
@@ -288,6 +310,7 @@ textarea[readonly] {
     padding: 20px;
     background: var(--bg-color);
     border-radius: 8px;
+    border: 1px solid var(--border-color);
 }
 
 .message-box h3 {
@@ -310,7 +333,7 @@ footer p {
 }
 
 .warning {
-    color: var(--error-color);
+    color: #fca5a5;
     font-weight: 600;
 }
 
@@ -327,6 +350,7 @@ footer p {
     transition: transform 0.3s ease-in-out;
     z-index: 1000;
     max-width: 400px;
+    border: 1px solid;
 }
 
 .notification.show {
@@ -336,11 +360,13 @@ footer p {
 .notification-success {
     background: var(--success-color);
     color: white;
+    border-color: #059669;
 }
 
 .notification-error {
     background: var(--error-color);
     color: white;
+    border-color: #dc2626;
 }
 
 /* Loading state */
