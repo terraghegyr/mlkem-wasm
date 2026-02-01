@@ -2,7 +2,9 @@
 
 **this is my pet project to learn Rust and PQC. Please don't hate me with the "quality"**
 
-A web application demonstrating ML-KEM-768 (Module-Lattice-Based Key Encapsulation Mechanism) for quantum-resistant key exchange and secure messaging.
+A web application demonstrating ML-KEM-768 (Module-Lattice-Based Key Encapsulation Mechanism) for quantum-resistant key exchange and secure messaging. 
+
+MLKEM (key exchange) is implemented using Rust (WASM-Compiled) and data encryption and decryption (AAES-256-GCM) are implemented via Web Crypt API.
 
 ## Features
 
@@ -23,38 +25,15 @@ A web application demonstrating ML-KEM-768 (Module-Lattice-Based Key Encapsulati
 
 ## Running the Application
 
-### Option 1: Using Python's HTTP Server
-
 ```bash
 # Navigate to the mlkem-wasm directory
-cd /home/anthony/tmp/mlkem-2-rust/mlkem-wasm
+cd mlkem-wasm
 
 # Start a simple HTTP server
 python3 -m http.server 8000
 ```
 
 Then open your browser to: `http://localhost:8000`
-
-### Option 2: Using Node.js HTTP Server
-
-```bash
-# Install http-server globally (if not already installed)
-npm install -g http-server
-
-# Navigate to the mlkem-wasm directory
-cd /home/anthony/tmp/mlkem-2-rust/mlkem-wasm
-
-# Start the server
-http-server -p 8000
-```
-
-Then open your browser to: `http://localhost:8000`
-
-### Option 3: Using VS Code Live Server
-
-1. Install the "Live Server" extension in VS Code
-2. Right-click on `index.html`
-3. Select "Open with Live Server"
 
 ## Usage Instructions
 
@@ -135,7 +114,6 @@ wasm-pack build --target web
 ## Browser Requirements
 
 - Modern browser with WebAssembly support
-- Chrome 57+, Firefox 52+, Safari 11+, Edge 16+
 - JavaScript must be enabled
 
 ## License
