@@ -207,6 +207,98 @@ textarea::placeholder {
     color: #64748b;
 }
 
+/* Expiration controls */
+.expiration-selector {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: var(--bg-color);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.expiration-selector label {
+    display: block;
+    margin-bottom: 10px;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+}
+
+.expiration-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.expiration-input,
+.expiration-select {
+    padding: 10px 12px;
+    background: var(--card-bg-light);
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.expiration-input {
+    width: 100px;
+    text-align: center;
+}
+
+.expiration-select {
+    flex: 1;
+    cursor: pointer;
+}
+
+.expiration-input:focus,
+.expiration-select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+.expiration-timer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(168, 85, 247, 0.1));
+    border-radius: 6px;
+    border: 1px solid var(--primary-color);
+}
+
+.timer-label {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.timer-display {
+    font-family: 'Courier New', monospace;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    text-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+}
+
+.timer-display.warning {
+    color: #f59e0b;
+    text-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+    animation: pulse 1s infinite;
+}
+
+.timer-display.danger {
+    color: var(--error-color);
+    text-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+    animation: pulse 0.5s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
 .btn {
     padding: 12px 24px;
     border: none;

@@ -4,6 +4,10 @@ import init, { keygen, encapsulate, decapsulate, derive_aes_key } from './pkg/ml
 // Global state
 let wasmReady = false;
 let currentAesKey = null;
+let expirationTimer = null;
+let expirationEndTime = null;
+let expirationTimerB = null;
+let expirationEndTimeB = null;
 
 // Initialize WASM
 async function initWasm() {
@@ -61,6 +65,203 @@ window.copyToClipboard = function(elementId) {
     }, 300);
 };
 
+// Expiration timer functions
+function startExpirationTimer() {
+    // Clear any existing timer
+    if (expirationTimer) {
+        clearInterval(expirationTimer);
+    }
+
+    // Get expiration settings
+    const value = parseInt(document.getElementById('expirationValue').value);
+    const unit = document.getElementById('expirationUnit').value;
+
+    // Calculate expiration time in milliseconds
+    let expirationMs;
+    if (unit === 'seconds') {
+        expirationMs = value * 1000;
+    } else if (unit === 'minutes') {
+        expirationMs = value * 60 * 1000;
+    } else {
+        expirationMs = value * 60 * 60 * 1000;
+    }
+
+    // Set expiration end time
+    expirationEndTime = Date.now() + expirationMs;
+
+    // Show timer display
+    document.getElementById('expirationTimer').style.display = 'flex';
+
+    // Update timer every second
+    expirationTimer = setInterval(updateExpirationDisplay, 1000);
+    updateExpirationDisplay(); // Initial update
+}
+
+function updateExpirationDisplay() {
+    if (!expirationEndTime) return;
+
+    const now = Date.now();
+    const remaining = expirationEndTime - now;
+
+    if (remaining <= 0) {
+        // Keys expired
+        clearExpiredKeys();
+        return;
+    }
+
+    // Calculate minutes and seconds
+    const totalSeconds = Math.floor(remaining / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+
+    // Format display
+    const display = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    const timerElement = document.getElementById('timerDisplay');
+    timerElement.textContent = display;
+
+    // Update visual warning states
+    timerElement.classList.remove('warning', 'danger');
+    if (remaining < 60000) { // Less than 1 minute
+        timerElement.classList.add('danger');
+    } else if (remaining < 300000) { // Less than 5 minutes
+        timerElement.classList.add('warning');
+    }
+}
+
+function clearExpiredKeys() {
+    // Stop timer
+    if (expirationTimer) {
+        clearInterval(expirationTimer);
+        expirationTimer = null;
+    }
+    expirationEndTime = null;
+
+    // Clear all keys and secrets
+    document.getElementById('publicKeyA').value = '';
+    document.getElementById('secretKeyA').value = '';
+    document.getElementById('sharedSecretA').value = '';
+    document.getElementById('sharedSecretB').value = '';
+    document.getElementById('ciphertextInput').value = '';
+    document.getElementById('ciphertextOutput').value = '';
+
+    // Clear AES key
+    currentAesKey = null;
+
+    // Hide timer
+    document.getElementById('expirationTimer').style.display = 'none';
+    document.getElementById('timerDisplay').textContent = '--:--';
+
+    // Show notification
+    showError('Keys have expired and been cleared for security!');
+}
+
+function stopExpirationTimer() {
+    if (expirationTimer) {
+        clearInterval(expirationTimer);
+        expirationTimer = null;
+    }
+    expirationEndTime = null;
+    document.getElementById('expirationTimer').style.display = 'none';
+    document.getElementById('timerDisplay').textContent = '--:--';
+}
+
+// Expiration timer functions for User B
+function startExpirationTimerB() {
+    // Clear any existing timer
+    if (expirationTimerB) {
+        clearInterval(expirationTimerB);
+    }
+
+    // Get expiration settings
+    const value = parseInt(document.getElementById('expirationValueB').value);
+    const unit = document.getElementById('expirationUnitB').value;
+
+    // Calculate expiration time in milliseconds
+    let expirationMs;
+    if (unit === 'seconds') {
+        expirationMs = value * 1000;
+    } else if (unit === 'minutes') {
+        expirationMs = value * 60 * 1000;
+    } else {
+        expirationMs = value * 60 * 60 * 1000;
+    }
+
+    // Set expiration end time
+    expirationEndTimeB = Date.now() + expirationMs;
+
+    // Show timer display
+    document.getElementById('expirationTimerB').style.display = 'flex';
+
+    // Update timer every second
+    expirationTimerB = setInterval(updateExpirationDisplayB, 1000);
+    updateExpirationDisplayB(); // Initial update
+}
+
+function updateExpirationDisplayB() {
+    if (!expirationEndTimeB) return;
+
+    const now = Date.now();
+    const remaining = expirationEndTimeB - now;
+
+    if (remaining <= 0) {
+        // Keys expired
+        clearExpiredKeysB();
+        return;
+    }
+
+    // Calculate minutes and seconds
+    const totalSeconds = Math.floor(remaining / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+
+    // Format display
+    const display = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    const timerElement = document.getElementById('timerDisplayB');
+    timerElement.textContent = display;
+
+    // Update visual warning states
+    timerElement.classList.remove('warning', 'danger');
+    if (remaining < 60000) { // Less than 1 minute
+        timerElement.classList.add('danger');
+    } else if (remaining < 300000) { // Less than 5 minutes
+        timerElement.classList.add('warning');
+    }
+}
+
+function clearExpiredKeysB() {
+    // Stop timer
+    if (expirationTimerB) {
+        clearInterval(expirationTimerB);
+        expirationTimerB = null;
+    }
+    expirationEndTimeB = null;
+
+    // Clear User B's keys and secrets
+    document.getElementById('publicKeyInput').value = '';
+    document.getElementById('sharedSecretB').value = '';
+    document.getElementById('ciphertextOutput').value = '';
+
+    // Clear AES key
+    currentAesKey = null;
+
+    // Hide timer
+    document.getElementById('expirationTimerB').style.display = 'none';
+    document.getElementById('timerDisplayB').textContent = '--:--';
+
+    // Show notification
+    showError('Keys have expired and been cleared for security!');
+}
+
+function stopExpirationTimerB() {
+    if (expirationTimerB) {
+        clearInterval(expirationTimerB);
+        expirationTimerB = null;
+    }
+    expirationEndTimeB = null;
+    document.getElementById('expirationTimerB').style.display = 'none';
+    document.getElementById('timerDisplayB').textContent = '--:--';
+}
+
 // User A: Generate keypair
 document.getElementById('generateKeysBtn').addEventListener('click', () => {
     if (!wasmReady) {
@@ -72,6 +273,10 @@ document.getElementById('generateKeysBtn').addEventListener('click', () => {
         const keys = keygen();
         document.getElementById('publicKeyA').value = keys.public_key;
         document.getElementById('secretKeyA').value = keys.secret_key;
+
+        // Start expiration timer
+        startExpirationTimer();
+
         showSuccess('Keys generated successfully! Share the public key with User B.');
     } catch (error) {
         console.error('Key generation error:', error);
@@ -101,6 +306,9 @@ document.getElementById('encapsulateBtn').addEventListener('click', () => {
         // Derive AES key for User B
         const aesKeyB64 = derive_aes_key(result.shared_secret);
         currentAesKey = aesKeyB64;
+
+        // Start expiration timer for User B
+        startExpirationTimerB();
 
         showSuccess('Encapsulation successful! Send the ciphertext to User A.');
     } catch (error) {
@@ -329,6 +537,86 @@ function showNotification(message, type) {
         setTimeout(() => notification.remove(), 300);
     }, 4000);
 }
+
+// Expiration value validation
+document.getElementById('expirationUnit').addEventListener('change', (e) => {
+    const valueInput = document.getElementById('expirationValue');
+    if (e.target.value === 'seconds') {
+        valueInput.min = 30;
+        valueInput.max = 300; // 5 minutes in seconds
+        // Adjust value if it's out of range
+        if (parseInt(valueInput.value) < 30 || parseInt(valueInput.value) > 300) {
+            valueInput.value = 60;
+        }
+    } else if (e.target.value === 'minutes') {
+        valueInput.min = 5;
+        valueInput.max = 1440; // 24 hours in minutes
+        // Adjust value if it's out of range
+        if (parseInt(valueInput.value) < 5 || parseInt(valueInput.value) > 1440) {
+            valueInput.value = 30;
+        }
+    } else { // hours
+        valueInput.min = 1;
+        valueInput.max = 24;
+        // Adjust value if it's out of range
+        if (parseInt(valueInput.value) > 24) {
+            valueInput.value = 24;
+        }
+    }
+});
+
+// Validate expiration value on input
+document.getElementById('expirationValue').addEventListener('input', (e) => {
+    const value = parseInt(e.target.value);
+    const min = parseInt(e.target.min);
+    const max = parseInt(e.target.max);
+
+    if (value < min) {
+        e.target.value = min;
+    } else if (value > max) {
+        e.target.value = max;
+    }
+});
+
+// Expiration value validation for User B
+document.getElementById('expirationUnitB').addEventListener('change', (e) => {
+    const valueInput = document.getElementById('expirationValueB');
+    if (e.target.value === 'seconds') {
+        valueInput.min = 30;
+        valueInput.max = 300; // 5 minutes in seconds
+        // Adjust value if it's out of range
+        if (parseInt(valueInput.value) < 30 || parseInt(valueInput.value) > 300) {
+            valueInput.value = 60;
+        }
+    } else if (e.target.value === 'minutes') {
+        valueInput.min = 5;
+        valueInput.max = 1440; // 24 hours in minutes
+        // Adjust value if it's out of range
+        if (parseInt(valueInput.value) < 5 || parseInt(valueInput.value) > 1440) {
+            valueInput.value = 30;
+        }
+    } else { // hours
+        valueInput.min = 1;
+        valueInput.max = 24;
+        // Adjust value if it's out of range
+        if (parseInt(valueInput.value) > 24) {
+            valueInput.value = 24;
+        }
+    }
+});
+
+// Validate expiration value on input for User B
+document.getElementById('expirationValueB').addEventListener('input', (e) => {
+    const value = parseInt(e.target.value);
+    const min = parseInt(e.target.min);
+    const max = parseInt(e.target.max);
+
+    if (value < min) {
+        e.target.value = min;
+    } else if (value > max) {
+        e.target.value = max;
+    }
+});
 
 // Initialize on page load
 disableButtons();

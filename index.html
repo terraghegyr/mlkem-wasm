@@ -32,6 +32,23 @@
 
                 <div class="step-section">
                     <h3>Step 1: Generate Keypair</h3>
+
+                    <div class="expiration-selector">
+                        <label>Key Expiration Time:</label>
+                        <div class="expiration-controls">
+                            <input type="number" id="expirationValue" min="30" max="300" value="60" class="expiration-input">
+                            <select id="expirationUnit" class="expiration-select">
+                                <option value="seconds">Seconds</option>
+                                <option value="minutes">Minutes</option>
+                                <option value="hours">Hours</option>
+                            </select>
+                        </div>
+                        <div id="expirationTimer" class="expiration-timer" style="display: none;">
+                            <span class="timer-label">Keys expire in:</span>
+                            <span id="timerDisplay" class="timer-display">--:--</span>
+                        </div>
+                    </div>
+
                     <button id="generateKeysBtn" class="btn btn-primary">Generate Keys</button>
                     <div class="output-group">
                         <label>Public Key (share this):</label>
@@ -72,6 +89,23 @@
 
                 <div class="step-section">
                     <h3>Step 3: Encapsulate</h3>
+
+                    <div class="expiration-selector">
+                        <label>Key Expiration Time:</label>
+                        <div class="expiration-controls">
+                            <input type="number" id="expirationValueB" min="30" max="300" value="60" class="expiration-input">
+                            <select id="expirationUnitB" class="expiration-select">
+                                <option value="seconds">Seconds</option>
+                                <option value="minutes">Minutes</option>
+                                <option value="hours">Hours</option>
+                            </select>
+                        </div>
+                        <div id="expirationTimerB" class="expiration-timer" style="display: none;">
+                            <span class="timer-label">Keys expire in:</span>
+                            <span id="timerDisplayB" class="timer-display">--:--</span>
+                        </div>
+                    </div>
+
                     <button id="encapsulateBtn" class="btn btn-primary">Encapsulate</button>
                     <div class="output-group">
                         <label>Ciphertext (send to User A):</label>
