@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ML-KEM Post-Quantum Encryption Demo</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔐 ML-KEM Post-Quantum Encryption Demo</h1>
+            <p class="subtitle">Demonstrating quantum-resistant key encapsulation and secure messaging</p>
+        </header>
+
+        <div class="workflow">
+            <div class="workflow-step">1. User A generates keys</div>
+            <div class="workflow-arrow">→</div>
+            <div class="workflow-step">2. User A shares public key</div>
+            <div class="workflow-arrow">→</div>
+            <div class="workflow-step">3. User B encapsulates</div>
+            <div class="workflow-arrow">→</div>
+            <div class="workflow-step">4. User A decapsulates</div>
+            <div class="workflow-arrow">→</div>
+            <div class="workflow-step">5. Secure messaging</div>
+        </div>
+
+        <div class="users-container">
+            <!-- User A Section -->
+            <div class="user-section user-a">
+                <h2>👤 User A (Key Generator)</h2>
+
+                <div class="step-section">
+                    <h3>Step 1: Generate Keypair</h3>
+                    <button id="generateKeysBtn" class="btn btn-primary">Generate Keys</button>
+                    <div class="output-group">
+                        <label>Public Key (share this):</label>
+                        <textarea id="publicKeyA" readonly rows="3"></textarea>
+                        <button class="btn-copy" onclick="copyToClipboard('publicKeyA')">Copy</button>
+                    </div>
+                    <div class="output-group">
+                        <label>Secret Key (keep private):</label>
+                        <textarea id="secretKeyA" readonly rows="3"></textarea>
+                    </div>
+                </div>
+
+                <div class="step-section">
+                    <h3>Step 4: Decapsulate Ciphertext</h3>
+                    <div class="input-group">
+                        <label>Ciphertext from User B:</label>
+                        <textarea id="ciphertextInput" rows="3" placeholder="Paste ciphertext here"></textarea>
+                    </div>
+                    <button id="decapsulateBtn" class="btn btn-primary">Decapsulate</button>
+                    <div class="output-group">
+                        <label>Shared Secret:</label>
+                        <textarea id="sharedSecretA" readonly rows="2"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User B Section -->
+            <div class="user-section user-b">
+                <h2>👤 User B (Encapsulator)</h2>
+
+                <div class="step-section">
+                    <h3>Step 2: Receive Public Key</h3>
+                    <div class="input-group">
+                        <label>Public Key from User A:</label>
+                        <textarea id="publicKeyInput" rows="3" placeholder="Paste User A's public key here"></textarea>
+                    </div>
+                </div>
+
+                <div class="step-section">
+                    <h3>Step 3: Encapsulate</h3>
+                    <button id="encapsulateBtn" class="btn btn-primary">Encapsulate</button>
+                    <div class="output-group">
+                        <label>Ciphertext (send to User A):</label>
+                        <textarea id="ciphertextOutput" readonly rows="3"></textarea>
+                        <button class="btn-copy" onclick="copyToClipboard('ciphertextOutput')">Copy</button>
+                    </div>
+                    <div class="output-group">
+                        <label>Shared Secret:</label>
+                        <textarea id="sharedSecretB" readonly rows="2"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Encryption/Decryption Section -->
+        <div class="encryption-section">
+            <h2>🔒 Secure Messaging (After Key Exchange)</h2>
+            <p class="info-text">Both users can now encrypt and decrypt messages using their shared secret</p>
+
+            <div class="messaging-container">
+                <div class="message-box">
+                    <h3>Encrypt Message</h3>
+                    <div class="input-group">
+                        <label>Plaintext:</label>
+                        <textarea id="plaintextInput" rows="4" placeholder="Type your message here..."></textarea>
+                    </div>
+                    <button id="encryptBtn" class="btn btn-success">Encrypt</button>
+                    <div class="output-group">
+                        <label>Encrypted (send this):</label>
+                        <textarea id="encryptedOutput" readonly rows="4"></textarea>
+                        <button class="btn-copy" onclick="copyToClipboard('encryptedOutput')">Copy</button>
+                    </div>
+                </div>
+
+                <div class="message-box">
+                    <h3>Decrypt Message</h3>
+                    <div class="input-group">
+                        <label>Encrypted message:</label>
+                        <textarea id="encryptedInput" rows="4" placeholder="Paste encrypted message here..."></textarea>
+                    </div>
+                    <button id="decryptBtn" class="btn btn-success">Decrypt</button>
+                    <div class="output-group">
+                        <label>Decrypted:</label>
+                        <textarea id="decryptedOutput" readonly rows="4"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Using ML-KEM-768 (FIPS 203) - Post-Quantum Cryptography Standard</p>
+            <p class="warning">⚠️ Demo purposes only - Not audited for production use</p>
+        </footer>
+    </div>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>
