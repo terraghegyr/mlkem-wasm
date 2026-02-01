@@ -155,6 +155,36 @@
             </div>
         </div>
 
+        <!-- File Encryption/Decryption Section -->
+        <div class="encryption-section file-encryption-section">
+            <h2>📁 File Encryption/Decryption</h2>
+            <p class="info-text">Encrypt and decrypt files using your shared secret (requires key exchange first)</p>
+
+            <div class="messaging-container">
+                <div class="message-box">
+                    <h3>Encrypt File</h3>
+                    <div class="input-group">
+                        <label>Select File:</label>
+                        <input type="file" id="fileInput" class="file-input">
+                        <div id="fileInfo" class="file-info"></div>
+                    </div>
+                    <button id="encryptFileBtn" class="btn btn-success">Encrypt File</button>
+                    <div id="encryptFileStatus" class="file-status"></div>
+                </div>
+
+                <div class="message-box">
+                    <h3>Decrypt File</h3>
+                    <div class="input-group">
+                        <label>Select Encrypted File:</label>
+                        <input type="file" id="encryptedFileInput" class="file-input">
+                        <div id="encryptedFileInfo" class="file-info"></div>
+                    </div>
+                    <button id="decryptFileBtn" class="btn btn-success">Decrypt File</button>
+                    <div id="decryptFileStatus" class="file-status"></div>
+                </div>
+            </div>
+        </div>
+
         <footer>
             <p>Using ML-KEM-768 (FIPS 203) - Post-Quantum Cryptography Standard</p>
             <p class="warning">⚠️ Demo purposes only - Not audited for production use</p>
