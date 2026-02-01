@@ -473,6 +473,100 @@ footer p {
     60%, 100% { content: '...'; }
 }
 
+/* File encryption styles */
+.file-encryption-section {
+    margin-top: 40px;
+    border-top-color: #8b5cf6;
+}
+
+.file-input {
+    width: 100%;
+    padding: 12px;
+    background: var(--card-bg-light);
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.file-input:hover {
+    border-color: var(--primary-color);
+}
+
+.file-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+.file-input::file-selector-button {
+    padding: 8px 16px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-right: 12px;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.file-input::file-selector-button:hover {
+    background: var(--primary-hover);
+}
+
+.file-info {
+    margin-top: 10px;
+    padding: 10px;
+    background: var(--bg-color);
+    border-radius: 6px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    display: none;
+}
+
+.file-info.show {
+    display: block;
+}
+
+.file-info .filename {
+    color: var(--text-primary);
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.file-info .filesize {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+}
+
+.file-status {
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    display: none;
+}
+
+.file-status.show {
+    display: block;
+}
+
+.file-status.success {
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid var(--success-color);
+    color: var(--success-color);
+}
+
+.file-status.error {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid var(--error-color);
+    color: var(--error-color);
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .container {

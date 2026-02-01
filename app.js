@@ -618,6 +618,206 @@ document.getElementById('expirationValueB').addEventListener('input', (e) => {
     }
 });
 
+// File encryption/decryption
+let selectedFile = null;
+let selectedEncryptedFile = null;
+
+// File input handlers
+document.getElementById('fileInput').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        selectedFile = file;
+        const fileInfo = document.getElementById('fileInfo');
+        fileInfo.innerHTML = `
+            <div class="filename">📄 ${file.name}</div>
+            <div class="filesize">Size: ${formatFileSize(file.size)}</div>
+        `;
+        fileInfo.classList.add('show');
+    }
+});
+
+document.getElementById('encryptedFileInput').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        selectedEncryptedFile = file;
+        const fileInfo = document.getElementById('encryptedFileInfo');
+        fileInfo.innerHTML = `
+            <div class="filename">🔒 ${file.name}</div>
+            <div class="filesize">Size: ${formatFileSize(file.size)}</div>
+        `;
+        fileInfo.classList.add('show');
+    }
+});
+
+// Encrypt file
+document.getElementById('encryptFileBtn').addEventListener('click', async () => {
+    if (!currentAesKey) {
+        showError('Please complete the key exchange first');
+        return;
+    }
+
+    if (!selectedFile) {
+        showError('Please select a file to encrypt');
+        return;
+    }
+
+    const statusDiv = document.getElementById('encryptFileStatus');
+    statusDiv.textContent = 'Encrypting file...';
+    statusDiv.className = 'file-status show';
+
+    try {
+        const encryptedData = await encryptFile(selectedFile, currentAesKey);
+        downloadFile(encryptedData, selectedFile.name + '.encrypted');
+
+        statusDiv.textContent = `✓ File encrypted successfully! Download started: ${selectedFile.name}.encrypted`;
+        statusDiv.classList.add('success');
+
+        showSuccess('File encrypted and download started!');
+    } catch (error) {
+        console.error('File encryption error:', error);
+        statusDiv.textContent = `✗ Encryption failed: ${error.message}`;
+        statusDiv.classList.add('error');
+        showError('Failed to encrypt file: ' + error.message);
+    }
+});
+
+// Decrypt file
+document.getElementById('decryptFileBtn').addEventListener('click', async () => {
+    if (!currentAesKey) {
+        showError('Please complete the key exchange first');
+        return;
+    }
+
+    if (!selectedEncryptedFile) {
+        showError('Please select an encrypted file to decrypt');
+        return;
+    }
+
+    const statusDiv = document.getElementById('decryptFileStatus');
+    statusDiv.textContent = 'Decrypting file...';
+    statusDiv.className = 'file-status show';
+
+    try {
+        const decryptedData = await decryptFile(selectedEncryptedFile, currentAesKey);
+
+        // Remove .encrypted extension if present
+        let originalName = selectedEncryptedFile.name;
+        if (originalName.endsWith('.encrypted')) {
+            originalName = originalName.slice(0, -10);
+        }
+
+        downloadFile(decryptedData, originalName);
+
+        statusDiv.textContent = `✓ File decrypted successfully! Download started: ${originalName}`;
+        statusDiv.classList.add('success');
+
+        showSuccess('File decrypted and download started!');
+    } catch (error) {
+        console.error('File decryption error:', error);
+        statusDiv.textContent = `✗ Decryption failed: ${error.message}`;
+        statusDiv.classList.add('error');
+        showError('Failed to decrypt file: ' + error.message);
+    }
+});
+
+// Encrypt file function
+async function encryptFile(file, aesKeyB64) {
+    const cryptoObj = window.crypto || window.msCrypto;
+    if (!cryptoObj || !cryptoObj.subtle) {
+        throw new Error('Web Crypto API not available');
+    }
+
+    // Read file as ArrayBuffer
+    const fileData = await file.arrayBuffer();
+
+    // Decode base64 AES key
+    const aesKeyBytes = base64ToArrayBuffer(aesKeyB64);
+
+    // Import AES key
+    const cryptoKey = await cryptoObj.subtle.importKey(
+        'raw',
+        aesKeyBytes,
+        { name: 'AES-GCM', length: 256 },
+        false,
+        ['encrypt']
+    );
+
+    // Generate random IV (12 bytes for GCM)
+    const iv = cryptoObj.getRandomValues(new Uint8Array(12));
+
+    // Encrypt
+    const ciphertext = await cryptoObj.subtle.encrypt(
+        { name: 'AES-GCM', iv: iv },
+        cryptoKey,
+        fileData
+    );
+
+    // Combine IV and ciphertext
+    const combined = new Uint8Array(iv.length + ciphertext.byteLength);
+    combined.set(iv, 0);
+    combined.set(new Uint8Array(ciphertext), iv.length);
+
+    return combined;
+}
+
+// Decrypt file function
+async function decryptFile(file, aesKeyB64) {
+    const cryptoObj = window.crypto || window.msCrypto;
+    if (!cryptoObj || !cryptoObj.subtle) {
+        throw new Error('Web Crypto API not available');
+    }
+
+    // Read encrypted file as ArrayBuffer
+    const encryptedData = await file.arrayBuffer();
+    const encryptedArray = new Uint8Array(encryptedData);
+
+    // Extract IV and ciphertext
+    const iv = encryptedArray.slice(0, 12);
+    const ciphertext = encryptedArray.slice(12);
+
+    // Decode base64 AES key
+    const aesKeyBytes = base64ToArrayBuffer(aesKeyB64);
+
+    // Import AES key
+    const cryptoKey = await cryptoObj.subtle.importKey(
+        'raw',
+        aesKeyBytes,
+        { name: 'AES-GCM', length: 256 },
+        false,
+        ['decrypt']
+    );
+
+    // Decrypt
+    const decrypted = await cryptoObj.subtle.decrypt(
+        { name: 'AES-GCM', iv: iv },
+        cryptoKey,
+        ciphertext
+    );
+
+    return new Uint8Array(decrypted);
+}
+
+// Download file helper
+function downloadFile(data, filename) {
+    const blob = new Blob([data]);
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+// Format file size helper
+function formatFileSize(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + ' KB';
+    if (bytes < 1024 * 1024 * 1024) return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+    return (bytes / (1024 * 1024 * 1024)).toFixed(2) + ' GB';
+}
+
 // Initialize on page load
 disableButtons();
 initWasm();
